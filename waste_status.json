@@ -1,0 +1,44 @@
+[
+    {
+        "time": "2026-05-11 02:05:09",
+        "waste": "Paper",
+        "confidence": 0.54,
+        "status": "UNPROCESSED"
+    },
+    {
+        "time": "2026-05-11 02:05:14",
+        "waste": "Paper",
+        "confidence": 0.46,
+        "status": "UNPROCESSED"
+    },
+    {
+        "time": "2026-05-11 02:05:19",
+        "waste": "Paper",
+        "confidence": 0.6,
+        "status": "UNPROCESSED"
+    },
+    {
+        "time": "2026-05-11 02:05:24",
+        "waste": "Paper",
+        "confidence": 0.52,
+        "status": "UNPROCESSED"
+    },
+    {
+        "time": "2026-05-11 02:05:24",
+        "waste": "Paper",
+        "confidence": 0.52,
+        "status": "PROCESSED"
+    },
+    {
+        "time": "2026-05-11 02:05:30",
+        "waste": "Paper",
+        "confidence": 0.48,
+        "status": "UNPROCESSED"
+    },
+    {
+        "time": "2026-05-11 02:05:30",
+        "waste": "Paper",
+        "confidence": 0.48,
+        "status": "PROCESSED"
+    }
+]

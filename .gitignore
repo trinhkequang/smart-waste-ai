@@ -1,0 +1,13 @@
+__pycache__/
+runs/
+dataset/
+static/captures/
+
+*.pt
+*.h5
+*.jpg
+*.png
+*.mp4
+*.avi
+
+.env

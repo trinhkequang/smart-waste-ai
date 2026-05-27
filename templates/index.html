@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Waste AI Blockchain</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(circle at top left, rgba(0,255,255,0.18), transparent 35%),
+                radial-gradient(circle at top right, rgba(0,255,120,0.12), transparent 30%),
+                #05070a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            padding: 24px 34px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand h1 {
+            margin: 0;
+            color: #00ffff;
+            font-size: 38px;
+            letter-spacing: 1px;
+        }
+
+        .brand p {
+            margin: 8px 0 0;
+            color: #aab7bd;
+        }
+
+        .nav a {
+            color: #00ffff;
+            text-decoration: none;
+            border: 1px solid rgba(0,255,255,0.5);
+            padding: 12px 18px;
+            border-radius: 14px;
+            background: rgba(0,255,255,0.08);
+            font-weight: bold;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            padding: 0 34px 28px;
+        }
+
+        .camera-card {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(0,255,255,0.35);
+            border-radius: 26px;
+            padding: 18px;
+            box-shadow: 0 0 35px rgba(0,255,255,0.12);
+        }
+
+        .camera-card img {
+            width: 100%;
+            border-radius: 20px;
+            border: 2px solid rgba(0,255,255,0.7);
+        }
+
+        .side {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.13);
+            border-radius: 22px;
+            padding: 20px;
+            box-shadow: 0 0 24px rgba(0,0,0,0.35);
+        }
+
+        .card h2 {
+            margin: 0 0 14px;
+            color: #00ffff;
+            font-size: 19px;
+        }
+
+        .status {
+            font-size: 34px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .recycle {
+            color: #00ff75;
+        }
+
+        .non {
+            color: #ff3b3b;
+        }
+
+        .waiting {
+            color: #ffd23c;
+        }
+
+        .action {
+            padding: 13px;
+            border-radius: 14px;
+            background: rgba(0,255,255,0.12);
+            font-weight: bold;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 10px 0;
+            color: #d7e2e5;
+            font-size: 15px;
+        }
+
+        .value {
+            font-weight: bold;
+            color: white;
+            text-align: right;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-box {
+            background: rgba(0,0,0,0.32);
+            padding: 18px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .num {
+            font-size: 34px;
+            font-weight: bold;
+        }
+
+        .history {
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: rgba(0,0,0,0.30);
+            border-left: 4px solid #00ffff;
+            padding: 11px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .history-time {
+            color: #9aa;
+            font-size: 12px;
+        }
+
+        @media(max-width: 1000px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <div class="brand">
+        <h1>♻ SMART WASTE AI</h1>
+        <p>AI Waste Sorting System · Blockchain Storage · Telegram Alert</p>
+    </div>
+
+    <div class="nav">
+        <a href="/blockchain">View Blockchain Data</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="camera-card">
+        <img src="/video">
+    </div>
+
+    <div class="side">
+
+        <div class="card">
+            <h2>Current Classification</h2>
+            <div id="mainStatus" class="status waiting">WAITING</div>
+            <div id="message" class="action">Đưa rác vào vùng nhận diện</div>
+        </div>
+
+        <div class="card">
+            <h2>Detection Information</h2>
+
+            <div class="info-row">
+                <span>Detected Object</span>
+                <span id="label" class="value">None</span>
+            </div>
+
+            <div class="info-row">
+                <span>Confidence</span>
+                <span id="confidence" class="value">0</span>
+            </div>
+
+            <div class="info-row">
+                <span>Action</span>
+                <span id="action" class="value">Waiting</span>
+            </div>
+
+            <div class="info-row">
+                <span>Telegram</span>
+                <span id="telegram" class="value">WAITING</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Blockchain Status</h2>
+
+            <div class="info-row">
+                <span>Status</span>
+                <span id="blockchainStatus" class="value">WAITING</span>
+            </div>
+
+            <div class="info-row">
+                <span>Latest Block</span>
+                <span id="latestBlock" class="value">None</span>
+            </div>
+
+            <div class="info-row">
+                <span>Hash</span>
+                <span id="latestHash" class="value">None</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Statistics</h2>
+
+            <div class="stats">
+                <div class="stat-box">
+                    <div id="recycleCount" class="num recycle">0</div>
+                    <div>Recyclable</div>
+                </div>
+
+                <div class="stat-box">
+                    <div id="nonRecycleCount" class="num non">0</div>
+                    <div>Non-Recyclable</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Recent History</h2>
+            <div id="history" class="history"></div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    function updateStatus() {
+        fetch("/status")
+            .then(response => response.json())
+            .then(data => {
+                const status = document.getElementById("mainStatus");
+
+                status.innerText = data.status;
+                status.className = "status";
+
+                if (data.status === "Recyclable") {
+                    status.classList.add("recycle");
+                } else if (data.status === "Non-Recyclable") {
+                    status.classList.add("non");
+                } else {
+                    status.classList.add("waiting");
+                }
+
+                document.getElementById("message").innerText = data.message;
+                document.getElementById("label").innerText = data.label;
+                document.getElementById("confidence").innerText = data.confidence;
+                document.getElementById("action").innerText = data.action;
+                document.getElementById("telegram").innerText = data.telegram_status;
+                document.getElementById("blockchainStatus").innerText = data.blockchain_status;
+                document.getElementById("latestBlock").innerText = data.latest_block;
+                document.getElementById("latestHash").innerText = data.latest_hash;
+                document.getElementById("recycleCount").innerText = data.recycle_count;
+                document.getElementById("nonRecycleCount").innerText = data.non_recycle_count;
+
+                const historyBox = document.getElementById("history");
+                historyBox.innerHTML = "";
+
+                data.history.forEach(item => {
+                    const div = document.createElement("div");
+                    div.className = "history-item";
+
+                    div.innerHTML = `
+                        <b>${item.status}</b> · ${item.label}
+                        <br>
+                        Confidence: ${item.confidence}
+                        <br>
+                        <span class="history-time">${item.datetime}</span>
+                    `;
+
+                    historyBox.appendChild(div);
+                });
+            });
+    }
+
+    setInterval(updateStatus, 700);
+</script>
+
+</body>
+</html>

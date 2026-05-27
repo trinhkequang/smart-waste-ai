@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blockchain Data</title>
+
+    <style>
+        body {
+            margin: 0;
+            background:
+                radial-gradient(circle at top left, rgba(0,255,255,0.18), transparent 35%),
+                #05070a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            padding: 28px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,255,255,0.25);
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #00ffff;
+            font-size: 42px;
+        }
+
+        .header p {
+            color: #b8c5c8;
+        }
+
+        .header a {
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1350px;
+            margin: auto;
+            padding: 28px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(0,255,255,0.12);
+            border: 1px solid rgba(0,255,255,0.35);
+            padding: 12px 16px;
+            border-radius: 14px;
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        .block {
+            background: rgba(255,255,255,0.075);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-left: 5px solid #00ffff;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 0 22px rgba(0,0,0,0.35);
+        }
+
+        .block h2 {
+            margin: 0 0 16px;
+            color: #00ffff;
+        }
+
+        .block-content {
+            display: grid;
+            grid-template-columns: 1.5fr 280px;
+            gap: 22px;
+            align-items: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 8px 14px;
+        }
+
+        .key {
+            color: #aab7bd;
+        }
+
+        .value {
+            color: white;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        .hash {
+            color: #00ffff;
+            word-break: break-all;
+            font-family: Consolas, monospace;
+        }
+
+        .recycle {
+            color: #00ff75;
+        }
+
+        .non {
+            color: #ff3b3b;
+        }
+
+        .block-img {
+            width: 100%;
+            border-radius: 16px;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0,255,255,0.25);
+        }
+
+        .no-img {
+            color: #888;
+            text-align: center;
+            border: 1px dashed #555;
+            border-radius: 16px;
+            padding: 50px 10px;
+        }
+
+        @media(max-width: 900px) {
+            .block-content {
+                grid-template-columns: 1fr;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>Blockchain Data</h1>
+    <p>Stored waste classification blocks from blockchain_web_data.json</p>
+    <a href="/">← Back to Dashboard</a>
+</div>
+
+<div class="container">
+
+    <div class="toolbar">
+        <div id="totalBlocks" class="badge">Total Blocks: 0</div>
+        <div class="badge">Auto refresh: 3s</div>
+    </div>
+
+    <div id="blocks">
+        Loading blockchain data...
+    </div>
+
+</div>
+
+
+<script>
+function loadBlockchain() {
+    fetch("/api/blockchain")
+        .then(res => res.json())
+        .then(data => {
+            const box = document.getElementById("blocks");
+            const total = document.getElementById("totalBlocks");
+
+            box.innerHTML = "";
+            total.innerText = "Total Blocks: " + data.length;
+
+            if (data.length === 0) {
+                box.innerHTML = "<p>No blockchain data found.</p>";
+                return;
+            }
+
+            data.forEach(block => {
+                const div = document.createElement("div");
+                div.className = "block";
+
+                let typeClass = "";
+                if (block.waste_type === "Recyclable") {
+                    typeClass = "recycle";
+                } else if (block.waste_type === "Non-Recyclable") {
+                    typeClass = "non";
+                }
+
+                div.innerHTML = `
+                    <h2>Block #${block.index}</h2>
+
+                    <div class="block-content">
+                        <div class="grid">
+                            <div class="key">Time</div>
+                            <div class="value">${block.real_time}</div>
+
+                            <div class="key">Waste Type</div>
+                            <div class="value ${typeClass}">${block.waste_type}</div>
+
+                            <div class="key">Confidence</div>
+                            <div class="value">${block.confidence}</div>
+
+                            <div class="key">Status</div>
+                            <div class="value">${block.status}</div>
+
+                            <div class="key">Nonce</div>
+                            <div class="value">${block.nonce}</div>
+
+                            <div class="key">Previous Hash</div>
+                            <div class="hash">${block.previous_hash}</div>
+
+                            <div class="key">Hash</div>
+                            <div class="hash">${block.hash}</div>
+                        </div>
+
+                        <div>
+                            ${
+                                block.image_url
+                                ? `<img class="block-img" src="${block.image_url}">`
+                                : `<div class="no-img">No image</div>`
+                            }
+                        </div>
+                    </div>
+                `;
+
+                box.appendChild(div);
+            });
+        });
+}
+
+loadBlockchain();
+setInterval(loadBlockchain, 3000);
+</script>
+
+</body>
+</html>
