@@ -218,10 +218,7 @@ Poster môn Công nghệ Blockchain được lưu tại:
 poster/Poster_Blockchain.pdf
 ```
 
-hoặc
 
-```text
-poster/Poster_Blockchain.png
 ```
 
 ---
