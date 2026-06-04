@@ -212,29 +212,8 @@ http://127.0.0.1:5000/blockchain
 
 ## Poster Đề Tài
 
-Poster môn Công nghệ Blockchain được lưu tại:
+## 📌 Poster Đề Tài
 
-```text
-poster/Poster_Blockchain.pdf
-```
+![Poster](Poster_Blockchain-1.png)
 
 
-```
-
----
-
-## Tác giả
-
-**Trịnh Kế Quang**
-
-Khoa Công Nghệ Thông Tin
-
-Trường Đại Học Đại Nam
-
-GitHub: https://github.com/trinhkequang
-
----
-
-## Giấy phép
-
-Dự án được xây dựng phục vụ mục đích học tập, nghiên cứu và báo cáo học phần.
