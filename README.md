@@ -1,105 +1,129 @@
-# ♻️ Smart Waste AI
+# ♻️ HỆ THỐNG PHÂN LOẠI RÁC THÔNG MINH TÍCH HỢP BLOCKCHAIN
 
-AI-powered smart waste classification system using YOLOv8, Flask, OpenCV, Blockchain and Telegram Bot.
+## Giới thiệu
 
----
+Hệ thống phân loại rác thông minh là giải pháp ứng dụng Trí tuệ nhân tạo (AI), Thị giác máy tính (Computer Vision), Blockchain và IoT nhằm hỗ trợ quản lý chất thải trong mô hình Thành phố thông minh.
 
-# 📌 Introduction
-
-Smart Waste AI is a real-time waste detection and classification system built with Deep Learning and Computer Vision technologies.
-
-The system uses a webcam to detect waste objects and classify them into:
-
-* Recyclable Waste
-* Non-Recyclable Waste
-
-Besides AI detection, the system also integrates:
-
-* 🌐 Flask Web Dashboard
-* ⛓️ Blockchain Data Storage
-* 📲 Telegram Notification
-* 📊 Detection History
-* 🧠 YOLOv8 Deep Learning Model
+Hệ thống sử dụng mô hình YOLOv8 để nhận diện và phân loại rác theo thời gian thực thông qua camera. Kết quả nhận diện được hiển thị trên Web Dashboard, gửi thông báo qua Telegram và lưu trữ trên Blockchain nhằm đảm bảo tính minh bạch, bảo mật và khả năng truy xuất dữ liệu.
 
 ---
 
-# 🚀 Features
+## Chức năng chính
 
-## ✅ Real-time Waste Detection
+### Nhận diện rác thời gian thực
 
-Detect waste objects directly from webcam using YOLOv8.
+* Nhận dữ liệu từ camera.
+* Phát hiện đối tượng bằng YOLOv8.
+* Phân loại thành:
 
-## ✅ Waste Classification
+  * ♻️ Recyclable (Tái chế)
+  * 🚫 Non-Recyclable (Không tái chế)
 
-Classify waste into:
+### Dashboard giám sát
 
-* Recyclable
-* Non-Recyclable
+* Hiển thị camera trực tiếp.
+* Hiển thị kết quả nhận diện.
+* Thống kê số lượng rác.
+* Lưu lịch sử phân loại.
 
-## ✅ Smart Dashboard
+### Blockchain Monitoring
 
-Modern Flask web dashboard with:
+* Lưu dữ liệu nhận diện dưới dạng Block.
+* Kiểm tra tính toàn vẹn dữ liệu.
+* Phát hiện chỉnh sửa trái phép (Tampered Detection).
 
-* Live camera stream
-* Detection information
-* Statistics
-* Detection history
-* Blockchain status
+### Telegram Notification
 
-## ✅ Telegram Notification
+Tự động gửi:
 
-Automatically send:
+* Ảnh nhận diện.
+* Loại rác.
+* Độ tin cậy (Confidence).
+* Thời gian nhận diện.
 
-* Captured image
-* Waste type
-* Confidence score
-* Detection time
+### IoT Smart Sorting
 
-to Telegram Bot.
+* ESP32 nhận lệnh từ hệ thống.
+* Servo SG90 tự động phân loại:
 
-## ✅ Blockchain Integration
-
-Store waste classification data into blockchain-style JSON blocks.
-
-Each block contains:
-
-* Timestamp
-* Waste type
-* Confidence
-* Previous hash
-* Current hash
-* Nonce
-
-## ✅ Blockchain Web Viewer
-
-View all stored blocks from:
-
-```bash
-http://127.0.0.1:5000/blockchain
-```
+  * Rác tái chế → Bên phải.
+  * Rác không tái chế → Bên trái.
 
 ---
 
-# 🧠 Technologies Used
+## Công nghệ sử dụng
 
-* Python
+### Trí tuệ nhân tạo
+
 * YOLOv8
-* OpenCV
-* Flask
 * Deep Learning
 * Computer Vision
+* OpenCV
+
+### Phát triển hệ thống
+
+* Python
+* Flask
+* HTML/CSS
+* JavaScript
+
+### Blockchain
+
+* Blockchain Python
+* SHA256 Hash
+* Proof of Work
+* JSON Blockchain Storage
+
+### IoT
+
+* ESP32
+* Servo SG90
+
+### Kết nối
+
 * Telegram Bot API
-* JSON Blockchain
 
 ---
 
-# 📂 Project Structure
+## Kiến trúc hệ thống
 
-```bash
-waste_project/
+Camera
+
+↓
+
+OpenCV
+
+↓
+
+YOLOv8
+
+↓
+
+Phân loại rác
+
+↓
+
+Flask Dashboard
+
+↓
+
+├── Telegram Bot
+
+├── Blockchain
+
+└── ESP32 + Servo SG90
+
+---
+
+## Cấu trúc dự án
+
+```text
+smart-waste-ai/
 │
 ├── app.py
+├── detect.py
 ├── blockchain.py
+├── blockchain_data.json
 ├── blockchain_web_data.json
 ├── block_images.json
 │
@@ -112,30 +136,28 @@ waste_project/
 │
 ├── runs/
 │
+├── poster/
+│   ├── Poster_Blockchain.pdf
+│   └── Poster_Blockchain.png
+│
 └── README.md
 ```
 
----
+## Cài đặt
 
-# ⚙️ Installation
-
-## 1️⃣ Clone Repository
+### Clone Repository
 
 ```bash
 git clone https://github.com/trinhkequang/smart-waste-ai.git
 ```
 
----
-
-## 2️⃣ Install Requirements
+### Cài đặt thư viện
 
 ```bash
 pip install flask ultralytics opencv-python requests numpy
 ```
 
----
-
-## 3️⃣ Run Application
+### Chạy chương trình
 
 ```bash
 python app.py
@@ -143,15 +165,15 @@ python app.py
 
 ---
 
-# 🌐 Web Dashboard
+## Truy cập hệ thống
 
-Open browser:
+Dashboard:
 
 ```bash
 http://127.0.0.1:5000
 ```
 
-Blockchain page:
+Blockchain Monitor:
 
 ```bash
 http://127.0.0.1:5000/blockchain
@@ -159,116 +181,63 @@ http://127.0.0.1:5000/blockchain
 
 ---
 
-# 🤖 YOLOv8 Model
+## Kết quả đạt được
 
-The system uses a custom YOLOv8 model trained on waste datasets.
+✅ Nhận diện rác thời gian thực
 
-Detected classes include:
+✅ Phân loại tái chế / không tái chế
 
-* plastic_bottle
-* cardboard
-* can
-* scrap_plastic
-* paper
-* battery
-* chemical waste
-* straw
-* snack bag
-* and more...
+✅ Dashboard trực quan
+
+✅ Lưu trữ Blockchain
+
+✅ Gửi Telegram tự động
+
+✅ Tích hợp ESP32 và Servo SG90
+
+✅ Hỗ trợ mô hình Thành phố thông minh
 
 ---
 
-# 📸 System Workflow
+## Hướng phát triển
+
+* Triển khai trên Ethereum Blockchain.
+* Kết nối Cloud để lưu trữ dữ liệu.
+* Tích hợp Smart Bin thực tế.
+* Hỗ trợ nhiều camera đồng thời.
+* Mở rộng bộ dữ liệu huấn luyện.
+* Triển khai tại khu dân cư và trường học.
+
+---
+
+## Poster Đề Tài
+
+Poster môn Công nghệ Blockchain được lưu tại:
 
 ```text
-Camera
-   ↓
-OpenCV Frame Capture
-   ↓
-Face Detection Filter
-   ↓
-ROI Waste Detection
-   ↓
-YOLOv8 Inference
-   ↓
-Waste Classification
-   ↓
-Stable Prediction
-   ↓
-Flask Dashboard
-   ↓
- ┌───────────────┬───────────────┐
- ↓               ↓               ↓
-Telegram     Blockchain      History Log
+poster/Poster_Blockchain.pdf
+```
+
+hoặc
+
+```text
+poster/Poster_Blockchain.png
 ```
 
 ---
 
-# 🔐 Blockchain Structure
+## Tác giả
 
-Example block:
+**Trịnh Kế Quang**
 
-```json
-{
-    "index": 14,
-    "timestamp": 1778829791.89751,
-    "real_time": "2026-05-15 14:23:11",
-    "waste_type": "Recyclable",
-    "confidence": 0.69,
-    "status": "Camera 1",
-    "previous_hash": "000071d46c9160271f21d28e02a05e2e728685ff75d40eb32fea10aca1875796",
-    "nonce": 23916,
-    "hash": "000013607aec632e1b5332ccc7f04d0ab89110d883e92541c3718ad5b36585ff"
-}
-```
+Khoa Công Nghệ Thông Tin
+
+Trường Đại Học Đại Nam
+
+GitHub: https://github.com/trinhkequang
 
 ---
 
-# 📷 Screenshots
+## Giấy phép
 
-## Main Dashboard
-
-* Real-time webcam
-* Waste classification
-* Statistics
-* Detection history
-
-## Blockchain Dashboard
-
-* Stored blockchain blocks
-* Detection images
-* Hash verification
-
-## Telegram Notification
-
-* Captured waste image
-* Detection result
-* Confidence score
-
----
-
-# 📈 Future Improvements
-
-* IoT integration
-* Servo-controlled smart trash bins
-* Raspberry Pi deployment
-* Cloud database
-* Ethereum blockchain integration
-* Multi-camera support
-
----
-
-# 👨‍💻 Author
-
-Trịnh Kế Quang
-
-Email: [trinhkequang01032004@gmail.com](mailto:trinhkequang01032004@gmail.com)
-
-GitHub:
-https://github.com/trinhkequang
-
----
-
-# 📜 License
-
-This project is for educational and research purposes.
+Dự án được xây dựng phục vụ mục đích học tập, nghiên cứu và báo cáo học phần.
