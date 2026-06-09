@@ -179,6 +179,7 @@ smart-city-waste-management/
 |   `-- captures/                # Ảnh được ghi nhận khi phân loại
 |
 |-- .env.example                 # Mẫu cấu hình Telegram
+|-- requirements.txt             # Danh sách thư viện Python
 `-- README.md
 ```
 
@@ -208,7 +209,7 @@ Kích hoạt trên Windows PowerShell:
 ### 3. Cài đặt thư viện
 
 ```bash
-pip install flask ultralytics opencv-python requests numpy
+pip install -r requirements.txt
 ```
 
 ### 4. Cấu hình hệ thống

@@ -1,13 +1,35 @@
+# Python
 __pycache__/
-runs/
-dataset/
-static/captures/
+*.py[cod]
+.venv/
+venv/
 
+# Local configuration
+.env
+.env.*
+!.env.example
+
+# Models, datasets, and generated training output
+dataset/
+runs/
 *.pt
 *.h5
+
+# Runtime output
+static/captures/
+*.log
+log.txt
+
+# Local media and unused report assets
 *.jpg
-*.png
 *.mp4
 *.avi
+Poster_Blockchain-1.png
+Poster_Blockchain.pdf
+poster
 
-.env
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
