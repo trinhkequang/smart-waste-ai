@@ -1,316 +1,284 @@
 <div align="center">
 
-# ♻️ SMART WASTE AI
+# HỆ THỐNG PHÂN LOẠI RÁC TỰ ĐỘNG
 
-## HỆ THỐNG PHÂN LOẠI RÁC THÔNG MINH TÍCH HỢP BLOCKCHAIN
+## Ứng dụng AI, IoT và Blockchain trong quản lý rác thải thông minh
 
-### Ứng dụng AI, Computer Vision, Blockchain và IoT trong Thành phố Thông minh
+**Đồ án môn học: Thành phố thông minh và Nông nghiệp thông minh**
 
----
+YOLOv8 · OpenCV · Flask · ESP32 · Blockchain · Telegram Bot
 
-YOLOv8 • OpenCV • Flask • Blockchain • ESP32 • Telegram Bot
-
----
-
-🎓 **TRƯỜNG ĐẠI HỌC ĐẠI NAM**
-
-💻 **KHOA CÔNG NGHỆ THÔNG TIN**
-
-👨‍💻 **TRỊNH KẾ QUANG**
+**Sinh viên thực hiện:** Trịnh Kế Quang<br>
+**Khoa:** Công nghệ Thông tin<br>
+**Trường:** Đại học Đại Nam
 
 </div>
 
 ---
 
-# 📌 POSTER ĐỀ TÀI
+## Tổng quan đề tài
 
-![Poster](Poster_Blockchain-1.png)
+Quản lý rác thải không chỉ là bài toán vệ sinh môi trường, mà còn là một phần quan trọng trong quá trình xây dựng đô thị và khu sản xuất nông nghiệp bền vững. Khi rác không được phân loại từ nguồn, tài nguyên có thể tái chế bị lãng phí, chi phí xử lý tăng cao và nguy cơ ô nhiễm đất, nước, không khí ngày càng lớn.
 
+Đề tài **Hệ thống phân loại rác tự động** được xây dựng như một mô hình thùng rác thông minh có khả năng nhận diện, phân loại và ghi nhận rác thải tự động. Hệ thống kết hợp trí tuệ nhân tạo, thị giác máy tính, thiết bị IoT và Blockchain để tạo nên một quy trình quản lý minh bạch, có thể giám sát và truy xuất.
 
----
+Đề tài hướng tới hai bối cảnh ứng dụng:
 
-# 📖 GIỚI THIỆU
+- **Thành phố thông minh:** hỗ trợ phân loại rác tại trường học, khu dân cư, cơ quan và nơi công cộng.
+- **Nông nghiệp thông minh:** làm nền tảng quản lý rác tại trang trại, khu sản xuất và chuỗi cung ứng nông nghiệp; góp phần phân tách vật liệu có thể tái chế khỏi chất thải cần xử lý riêng.
 
-Trong bối cảnh lượng rác thải sinh hoạt ngày càng gia tăng, việc phân loại rác thủ công gặp nhiều khó khăn, tốn thời gian và dễ xảy ra sai sót. Nhằm góp phần nâng cao hiệu quả quản lý chất thải và hỗ trợ mô hình Thành phố Thông minh, đề tài **Smart Waste AI** được xây dựng dựa trên sự kết hợp giữa Trí tuệ nhân tạo (AI), Thị giác máy tính (Computer Vision), Blockchain và IoT.
-
-Hệ thống sử dụng mô hình **YOLOv8** để nhận diện và phân loại rác theo thời gian thực thông qua camera. Kết quả nhận diện được hiển thị trực tiếp trên Dashboard, gửi thông báo qua Telegram và lưu trữ trên Blockchain nhằm đảm bảo tính minh bạch, toàn vẹn và khả năng truy xuất dữ liệu. Ngoài ra, hệ thống còn tích hợp **ESP32 và Servo SG90** để mô phỏng quá trình phân loại rác tự động.
-
----
-
-# 🎯 MỤC TIÊU ĐỀ TÀI
-
-* Xây dựng hệ thống nhận diện và phân loại rác tự động.
-* Ứng dụng YOLOv8 trong bài toán xử lý ảnh thời gian thực.
-* Tích hợp Blockchain để lưu trữ dữ liệu phân loại.
-* Đảm bảo tính minh bạch và khả năng truy xuất dữ liệu.
-* Kết hợp AI, Blockchain và IoT trong một hệ thống hoàn chỉnh.
-* Hỗ trợ định hướng phát triển Thành phố Thông minh.
+> Một thành phố thông minh không chỉ được đo bằng mức độ hiện đại của công nghệ, mà còn bằng khả năng sử dụng công nghệ để tạo ra môi trường sống xanh, minh bạch và bền vững hơn.
 
 ---
 
-# ⚙️ CHỨC NĂNG CHÍNH
+## Mục tiêu
 
-## 🤖 Nhận Diện Rác Thời Gian Thực
-
-* Nhận dữ liệu từ camera.
-* Phát hiện đối tượng bằng YOLOv8.
-* Phân loại rác thành:
-
-  * ♻️ Recyclable (Tái chế)
-  * 🚫 Non-Recyclable (Không tái chế)
-
-## 📊 Dashboard Giám Sát
-
-* Hiển thị camera trực tiếp.
-* Hiển thị kết quả nhận diện.
-* Thống kê số lượng rác.
-* Theo dõi lịch sử hoạt động.
-* Giám sát Blockchain theo thời gian thực.
-
-## ⛓️ Blockchain Monitoring
-
-* Lưu dữ liệu dưới dạng Block.
-* Liên kết các Block bằng Hash và Previous Hash.
-* Kiểm tra tính toàn vẹn dữ liệu.
-* Phát hiện chỉnh sửa trái phép (Tampered Detection).
-* Hỗ trợ truy xuất lịch sử phân loại rác.
-
-## 📲 Telegram Notification
-
-Hệ thống tự động gửi:
-
-* Ảnh nhận diện.
-* Loại rác.
-* Độ tin cậy (Confidence).
-* Thời gian phát hiện.
-
-## 🔌 IoT Smart Sorting
-
-ESP32 điều khiển Servo SG90 để mô phỏng thùng rác thông minh:
-
-* ♻️ Recyclable → Servo quay sang phải.
-* 🚫 Non-Recyclable → Servo quay sang trái.
+- Tự động nhận diện và phân loại rác bằng mô hình YOLOv8.
+- Điều khiển cơ cấu phân loại vật lý thông qua ESP32 và Servo.
+- Giám sát trạng thái hệ thống trên Dashboard theo thời gian thực.
+- Lưu lịch sử phân loại vào Blockchain để tăng tính toàn vẹn và khả năng truy xuất.
+- Gửi cảnh báo và kết quả nhận diện qua Telegram.
+- Xây dựng mô hình có thể mở rộng cho đô thị và khu sản xuất nông nghiệp thông minh.
 
 ---
 
-# 🏗️ KIẾN TRÚC HỆ THỐNG
+## Giá trị của đề tài
+
+### Đối với thành phố thông minh
+
+Hệ thống hỗ trợ tự động hóa khâu phân loại rác tại nguồn, cung cấp dữ liệu phục vụ thống kê và giúp đơn vị quản lý theo dõi hoạt động của các điểm thu gom. Khi được triển khai ở quy mô lớn, dữ liệu có thể hỗ trợ tối ưu lịch thu gom, giảm chi phí vận chuyển và nâng cao hiệu quả tái chế.
+
+### Đối với nông nghiệp thông minh
+
+Các trang trại và khu sản xuất nông nghiệp phát sinh nhiều loại chất thải như bao bì, chai nhựa, vật tư đã qua sử dụng và chất thải cần xử lý riêng. Mô hình có thể được mở rộng để nhận diện các nhóm chất thải này, ghi lại nguồn phát sinh và hỗ trợ xây dựng quy trình sản xuất sạch hơn.
+
+### Đối với môi trường và cộng đồng
+
+- Khuyến khích thói quen phân loại rác tại nguồn.
+- Hạn chế rác tái chế bị đưa vào khu xử lý chung.
+- Tạo dữ liệu minh bạch phục vụ giám sát và nghiên cứu.
+- Góp phần hướng tới kinh tế tuần hoàn và phát triển bền vững.
+
+---
+
+## Chức năng chính
+
+### Nhận diện rác bằng AI
+
+- Thu hình ảnh trực tiếp từ camera.
+- Phát hiện vật thể bằng mô hình YOLOv8 đã huấn luyện.
+- Phân loại kết quả thành `Recyclable` và `Non-Recyclable`.
+- Sử dụng cơ chế bỏ phiếu nhiều khung hình để tăng độ ổn định.
+- Hạn chế nhận diện sai khi khuôn mặt xuất hiện trong vùng camera.
+
+### Phân loại tự động bằng IoT
+
+- Flask gửi lệnh điều khiển đến ESP32 qua mạng nội bộ.
+- ESP32 điều khiển Servo để chuyển rác sang đúng ngăn.
+- Trạng thái kết nối IoT được cập nhật trên Dashboard.
+
+### Dashboard giám sát thời gian thực
+
+- Hiển thị luồng camera và kết quả nhận diện.
+- Theo dõi nhãn vật thể, độ tin cậy và hành động phân loại.
+- Thống kê số lượng rác tái chế và không tái chế.
+- Hiển thị lịch sử các lần phân loại gần nhất.
+
+### Lưu trữ và kiểm chứng bằng Blockchain
+
+- Mỗi kết quả phân loại được ghi thành một Block.
+- Các Block liên kết bằng `hash` và `previous_hash`.
+- Sử dụng SHA-256 và cơ chế Proof of Work.
+- Phát hiện dữ liệu bị chỉnh sửa hoặc chuỗi liên kết không hợp lệ.
+- Cho phép xem lịch sử và hình ảnh liên quan trên trang Blockchain Monitor.
+
+### Thông báo qua Telegram
+
+- Gửi loại rác và độ tin cậy.
+- Gửi thời gian phát hiện và trạng thái Blockchain.
+- Gửi ảnh chụp tại thời điểm hệ thống ghi nhận kết quả.
+
+---
+
+## Kiến trúc hệ thống
 
 ```text
-┌─────────────┐
-│   CAMERA    │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│   OpenCV    │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│   YOLOv8    │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────────────────┐
-│  PHÂN LOẠI RÁC THẢI     │
-└──────┬───────────┬──────┘
-       │           │
-       ▼           ▼
- ┌─────────┐  ┌─────────┐
- │ Telegram│  │Blockchain│
- └─────────┘  └─────────┘
-       │
-       ▼
-┌─────────────────┐
-│ ESP32 + Servo   │
-└─────────────────┘
+Camera
+   |
+   v
+OpenCV + YOLOv8
+   |
+   v
+Bộ xử lý và xác nhận kết quả
+   |
+   +------------------+-------------------+------------------+
+   |                  |                   |                  |
+   v                  v                   v                  v
+Dashboard          ESP32 + Servo       Telegram          Blockchain
+giám sát           phân loại vật lý     thông báo         lưu và kiểm chứng
+```
+
+### Quy trình hoạt động
+
+1. Camera liên tục ghi nhận hình ảnh trong vùng nhận diện.
+2. YOLOv8 phát hiện vật thể và trả về nhãn cùng độ tin cậy.
+3. Hệ thống xác nhận kết quả qua nhiều khung hình liên tiếp.
+4. Rác được xác định là tái chế hoặc không tái chế.
+5. ESP32 nhận lệnh và điều khiển Servo phân loại rác.
+6. Kết quả, thời gian và hình ảnh được lưu vào Blockchain.
+7. Dashboard cập nhật dữ liệu và Telegram gửi thông báo.
+
+---
+
+## Công nghệ sử dụng
+
+| Nhóm | Công nghệ | Vai trò |
+|---|---|---|
+| AI và Computer Vision | YOLOv8, OpenCV | Nhận diện và phân loại rác theo thời gian thực |
+| Backend | Python, Flask | Xử lý nghiệp vụ, API và luồng camera |
+| Frontend | HTML, CSS, JavaScript | Xây dựng Dashboard giám sát |
+| IoT | ESP32, Servo SG90 | Điều khiển cơ cấu phân loại vật lý |
+| Blockchain | SHA-256, Proof of Work, JSON | Lưu trữ và kiểm chứng lịch sử |
+| Kết nối | HTTP, Telegram Bot API | Gửi lệnh IoT và thông báo từ xa |
+
+---
+
+## Giao diện hệ thống
+
+### Dashboard giám sát
+
+![Dashboard giám sát](dashboard.png)
+
+### Blockchain Monitor
+
+![Blockchain Monitor](blockchain.png)
+
+### Thông báo Telegram
+
+![Thông báo Telegram](telegram.png)
+
+---
+
+## Cấu trúc dự án
+
+```text
+smart-city-waste-management/
+|
+|-- app.py                       # Ứng dụng Flask và luồng xử lý chính
+|-- blockchain.py                # Block, Blockchain và kiểm tra toàn vẹn
+|-- detect_demo.py               # Chương trình nhận diện thử nghiệm
+|-- train_yolo.py                # Huấn luyện mô hình YOLO
+|-- blockchain_web_data.json     # Dữ liệu Blockchain cho Dashboard
+|-- block_images.json            # Liên kết Block với ảnh nhận diện
+|
+|-- templates/
+|   |-- index.html               # Dashboard chính
+|   `-- blockchain.html          # Trang giám sát Blockchain
+|
+|-- static/
+|   `-- captures/                # Ảnh được ghi nhận khi phân loại
+|
+|-- .env.example                 # Mẫu cấu hình Telegram
+`-- README.md
 ```
 
 ---
 
-# 💻 CÔNG NGHỆ SỬ DỤNG
+## Cài đặt và chạy dự án
 
-### AI & Computer Vision
-
-* YOLOv8
-* Deep Learning
-* OpenCV
-* Computer Vision
-
-### Backend & Web
-
-* Python
-* Flask
-* HTML
-* CSS
-* JavaScript
-
-### Blockchain
-
-* Blockchain Python
-* SHA256 Hash
-* Proof of Work
-* JSON Blockchain Storage
-
-### IoT
-
-* ESP32
-* Servo SG90
-
-### Kết Nối
-
-* Telegram Bot API
-
----
-
-# 📸 DEMO HỆ THỐNG
-
-## Dashboard Chính
-
-![Dashboard](dashboard.png)
-
----
-
-## Blockchain Monitor
-
-![Blockchain](blockchain.png)
-
----
-
-## Telegram Notification
-
-![Telegram](telegram.png)
-
----
-
-# 🔐 BLOCKCHAIN TRONG HỆ THỐNG
-
-Blockchain đóng vai trò lưu trữ lịch sử phân loại rác dưới dạng các Block liên kết với nhau thông qua Hash và Previous Hash.
-
-Mỗi Block bao gồm:
-
-* Thời gian nhận diện.
-* Loại rác.
-* Độ tin cậy.
-* Trạng thái camera.
-* Previous Hash.
-* Current Hash.
-* Nonce.
-
-Khi một dữ liệu trong Block bị thay đổi, Hash sẽ thay đổi theo và hệ thống sẽ phát hiện Blockchain bị can thiệp, từ đó hiển thị trạng thái **TAMPERED** trên Dashboard.
-
----
-
-# 📂 CẤU TRÚC DỰ ÁN
-
-```text
-smart-waste-ai/
-│
-├── app.py
-├── detect.py
-├── blockchain.py
-├── blockchain_data.json
-├── blockchain_web_data.json
-├── block_images.json
-│
-├── templates/
-│   ├── index.html
-│   └── blockchain.html
-│
-├── static/
-│   └── captures/
-│
-├── dashboard.png
-├── blockchain.png
-├── telegram.png
-│
-├── Poster_Blockchain.pdf
-├── Poster_Blockchain-1.png
-│
-└── README.md
-```
-
----
-
-# 🚀 CÀI ĐẶT
-
-### Clone Repository
+### 1. Tải mã nguồn
 
 ```bash
-git clone https://github.com/trinhkequang/smart-waste-ai.git
+git clone https://github.com/trinhkequang/smart-city-waste-management.git
+cd smart-city-waste-management
 ```
 
-### Cài Đặt Thư Viện
+### 2. Tạo môi trường Python
+
+```bash
+python -m venv .venv
+```
+
+Kích hoạt trên Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### 3. Cài đặt thư viện
 
 ```bash
 pip install flask ultralytics opencv-python requests numpy
 ```
 
-### Chạy Chương Trình
+### 4. Cấu hình hệ thống
+
+- Cập nhật đường dẫn mô hình YOLO trong `app.py`.
+- Cập nhật địa chỉ `ESP32_IP` để phù hợp với mạng đang sử dụng.
+- Thiết lập Telegram bằng biến môi trường, không ghi token trực tiếp vào mã nguồn.
+
+```powershell
+$env:TELEGRAM_BOT_TOKEN="your_bot_token"
+$env:TELEGRAM_CHAT_ID="your_chat_id"
+```
+
+### 5. Khởi chạy
 
 ```bash
 python app.py
 ```
 
----
+Truy cập:
 
-# 🌐 TRUY CẬP HỆ THỐNG
-
-### Dashboard
-
-```bash
-http://127.0.0.1:5000
-```
-
-### Blockchain Monitor
-
-```bash
-http://127.0.0.1:5000/blockchain
-```
+- Dashboard: `http://127.0.0.1:5000`
+- Blockchain Monitor: `http://127.0.0.1:5000/blockchain`
 
 ---
 
-# 📈 KẾT QUẢ ĐẠT ĐƯỢC
+## Kết quả đạt được
 
-✅ Nhận diện rác thời gian thực
-
-✅ Phân loại rác tái chế và không tái chế
-
-✅ Dashboard giám sát trực quan
-
-✅ Blockchain lưu trữ dữ liệu
-
-✅ Kiểm tra tính toàn vẹn dữ liệu
-
-✅ Telegram Notification
-
-✅ ESP32 điều khiển Servo SG90
-
-✅ Mô phỏng hệ thống quản lý rác thông minh
+- Nhận diện và phân loại nhiều nhóm rác theo thời gian thực.
+- Tự động điều khiển mô hình thùng rác thông qua ESP32.
+- Xây dựng Dashboard trực quan để theo dõi toàn bộ hệ thống.
+- Lưu lịch sử phân loại và phát hiện thay đổi dữ liệu bằng Blockchain.
+- Gửi kết quả và hình ảnh đến người quản lý qua Telegram.
+- Hoàn thiện mô hình tích hợp AI, IoT, Web và Blockchain trong một quy trình thống nhất.
 
 ---
 
-# 🔮 HƯỚNG PHÁT TRIỂN
+## Hạn chế hiện tại
 
-* Triển khai Blockchain trên Ethereum.
-* Tích hợp Smart Contract.
-* Kết nối Cloud Database.
-* Mở rộng tập dữ liệu huấn luyện.
-* Hỗ trợ nhiều camera đồng thời.
-* Xây dựng mô hình Smart Bin thực tế.
-* Ứng dụng trong quản lý môi trường đô thị.
+- Mô hình phụ thuộc vào chất lượng và độ đa dạng của dữ liệu huấn luyện.
+- Độ chính xác có thể bị ảnh hưởng bởi ánh sáng, góc camera và vật thể bị che khuất.
+- Blockchain hiện được triển khai cục bộ, chưa phải mạng Blockchain phân tán.
+- ESP32 và máy chủ cần kết nối cùng mạng để trao đổi lệnh.
+- Hệ thống mới tập trung vào hai nhóm rác chính và cần mở rộng thêm cho chất thải nông nghiệp.
 
 ---
 
-# 👨‍💻 TÁC GIẢ
+## Hướng phát triển
 
-**Trịnh Kế Quang**
+- Bổ sung nhận diện rác hữu cơ, rác nguy hại và chất thải nông nghiệp.
+- Kết hợp cảm biến khối lượng, độ đầy và chất lượng không khí trong thùng rác.
+- Xây dựng bản đồ số theo dõi các điểm thu gom trong đô thị hoặc trang trại.
+- Ứng dụng dữ liệu để dự báo lượng rác và tối ưu tuyến thu gom.
+- Kết nối Cloud Database và Dashboard quản lý nhiều thiết bị.
+- Triển khai Blockchain phân tán hoặc Smart Contract để tăng khả năng xác thực.
+- Nghiên cứu tái sử dụng rác hữu cơ cho ủ phân và mô hình kinh tế tuần hoàn.
+- Phát triển ứng dụng di động để người quản lý nhận cảnh báo và theo dõi từ xa.
 
-Khoa Công Nghệ Thông Tin
+---
 
-Trường Đại Học Đại Nam
+## Định hướng đóng góp cho phát triển bền vững
 
-GitHub: https://github.com/trinhkequang
+Đề tài thể hiện cách các công nghệ của thành phố thông minh và nông nghiệp thông minh có thể kết nối trong một bài toán gần gũi: quản lý rác thải. AI giúp hệ thống hiểu dữ liệu từ môi trường, IoT biến kết quả thành hành động vật lý, Blockchain bảo vệ tính minh bạch, còn Dashboard giúp con người giám sát và ra quyết định.
 
+Với khả năng tiếp tục mở rộng, mô hình có thể trở thành nền tảng cho các điểm thu gom thông minh, trang trại xanh và hệ thống quản lý môi trường dựa trên dữ liệu.
 
+---
 
+## Tác giả
+
+**Trịnh Kế Quang**<br>
+Khoa Công nghệ Thông tin, Trường Đại học Đại Nam<br>
+GitHub: [github.com/trinhkequang](https://github.com/trinhkequang)
