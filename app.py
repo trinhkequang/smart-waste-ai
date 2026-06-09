@@ -20,21 +20,38 @@ CAPTURE_DIR = os.path.join(BASE_DIR, "static", "captures")
 os.makedirs(CAPTURE_DIR, exist_ok=True)
 
 # ================= TELEGRAM =================
-BOT_TOKEN = "8394675541:AAEFioTztoQuM7wBoWfQSmA1unXJqBRj7TI"
-CHAT_ID = "5253139760"
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
+
+# ================= ESP32 IOT =================
+ESP32_IP = "192.168.137.23"
+
+
+def send_iot_command(status):
+    try:
+        if status == "Recyclable":
+            url = f"http://{ESP32_IP}/sort?type=right"
+        elif status == "Non-Recyclable":
+            url = f"http://{ESP32_IP}/sort?type=left"
+        else:
+            return False
+
+        r = requests.get(url, timeout=3)
+        print("IoT:", status, r.status_code)
+        return r.ok
+
+    except Exception as e:
+        print("IoT Error:", e)
+        return False
 
 
 def send_telegram(text):
-    if BOT_TOKEN == "YOUR_BOT_TOKEN":
+    if not BOT_TOKEN or not CHAT_ID:
         return False
 
     try:
         url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-        r = requests.post(
-            url,
-            data={"chat_id": CHAT_ID, "text": text},
-            timeout=5
-        )
+        r = requests.post(url, data={"chat_id": CHAT_ID, "text": text}, timeout=5)
         return r.ok
     except Exception as e:
         print("Telegram Error:", e)
@@ -42,7 +59,7 @@ def send_telegram(text):
 
 
 def send_photo(path):
-    if BOT_TOKEN == "YOUR_BOT_TOKEN":
+    if not BOT_TOKEN or not CHAT_ID:
         return False
 
     try:
@@ -68,7 +85,7 @@ blockchain.difficulty = 3
 
 # ================= MODEL =================
 model = YOLO(
-    r"C:\Users\trinh\Downloads\waste_project\runs\detect\train8\weights\best.pt"
+    r"C:\Users\trinh\Downloads\waste_project\runs\detect\train9\weights\best.pt"
 )
 
 # ================= CAMERA =================
@@ -103,36 +120,23 @@ latest_info = {
     "latest_block": "None",
     "latest_hash": "None",
     "telegram_status": "WAITING",
+    "iot_status": "WAITING",
     "history": []
 }
 
 # ================= CLASS MAP =================
 RECYCLE = [
-    "can",
-    "cardboard_bowl",
-    "cardboard_box",
-    "plastic_bag",
-    "plastic_bottle",
-    "plastic_bottle_cap",
-    "plastic_box",
-    "plastic_cultery",
-    "plastic_cup",
-    "plastic_cup_lid",
-    "reuseable_paper",
-    "scrap_paper",
-    "scrap_plastic",
-    "snack_bag"
+    "can", "cardboard_bowl", "cardboard_box",
+    "plastic_bag", "plastic_bottle", "plastic_bottle_cap",
+    "plastic_box", "plastic_cultery", "plastic_cup",
+    "plastic_cup_lid", "reuseable_paper",
+    "scrap_paper", "scrap_plastic", "snack_bag"
 ]
 
 NON_RECYCLE = [
-    "battery",
-    "chemical_plastic_bottle",
-    "chemical_plastic_gallon",
-    "chemical_spray_can",
-    "light_bulb",
-    "paint_bucket",
-    "stick",
-    "straw"
+    "battery", "chemical_plastic_bottle",
+    "chemical_plastic_gallon", "chemical_spray_can",
+    "light_bulb", "paint_bucket", "stick", "straw"
 ]
 
 
@@ -205,7 +209,7 @@ def stable_result(new_result, label, confidence):
             "confidence": confidence
         })
 
-    if len(history_vote) < 5:
+    if len(history_vote) < 8:
         return "WAITING", "None", 0
 
     results_only = [item["result"] for item in history_vote]
@@ -213,16 +217,13 @@ def stable_result(new_result, label, confidence):
 
     result, times = count.most_common(1)[0]
 
-    if times >= 4:
+    if times >= 7:
         same_items = [
             item for item in history_vote
             if item["result"] == result
         ]
 
-        best_item = max(
-            same_items,
-            key=lambda x: x["confidence"]
-        )
+        best_item = max(same_items, key=lambda x: x["confidence"])
 
         locked_status = result
         locked_label = best_item["label"]
@@ -236,13 +237,27 @@ def stable_result(new_result, label, confidence):
     return "WAITING", "None", 0
 
 
+def load_json_safe(filename, default_value):
+    try:
+        if not os.path.exists(filename):
+            return default_value
+
+        with open(filename, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+
+        if not content:
+            return default_value
+
+        return json.loads(content)
+
+    except Exception as e:
+        print("JSON read error:", e)
+        return default_value
+
+
 def save_block_image(block_index, image_filename):
     try:
-        if os.path.exists(BLOCK_IMAGE_FILE):
-            with open(BLOCK_IMAGE_FILE, "r", encoding="utf-8") as f:
-                image_map = json.load(f)
-        else:
-            image_map = {}
+        image_map = load_json_safe(BLOCK_IMAGE_FILE, {})
 
         image_map[str(block_index)] = image_filename
 
@@ -262,8 +277,7 @@ def save_result(frame, status, label, confidence):
     if status not in ["Recyclable", "Non-Recyclable"]:
         return
 
-    # tránh ghi quá nhiều block liên tục
-    if now - last_saved_time < 8:
+    if now - last_saved_time < 15:
         return
 
     last_saved_time = now
@@ -299,6 +313,10 @@ def save_result(frame, status, label, confidence):
         print("Blockchain Error:", e)
         latest_info["blockchain_status"] = "ERROR"
 
+    # ================= SEND TO ESP32 =================
+    iot_ok = send_iot_command(status)
+    latest_info["iot_status"] = "SENT" if iot_ok else "OFF"
+
     if status == "Recyclable":
         latest_info["recycle_count"] += 1
     else:
@@ -323,6 +341,7 @@ def save_result(frame, status, label, confidence):
         f"Confidence: {confidence:.2f}\n"
         f"Time: {date_time}\n"
         f"Blockchain: {latest_info['blockchain_status']}\n"
+        f"IoT: {latest_info['iot_status']}\n"
         f"Latest Block: {latest_info['latest_block']}"
     )
 
@@ -357,13 +376,7 @@ def generate():
         rx1, ry1 = 170, 145
         rx2, ry2 = 500, 430
 
-        cv2.rectangle(
-            frame,
-            (rx1, ry1),
-            (rx2, ry2),
-            (0, 255, 255),
-            2
-        )
+        cv2.rectangle(frame, (rx1, ry1), (rx2, ry2), (0, 255, 255), 2)
 
         cv2.putText(
             frame,
@@ -384,11 +397,11 @@ def generate():
 
         results = model(
             roi,
-            conf=0.35,
+            conf=0.65,
             imgsz=640,
             verbose=False,
             iou=0.45,
-            max_det=3
+            max_det=1
         )
 
         for box in results[0].boxes:
@@ -398,7 +411,7 @@ def generate():
 
             area = (x2 - x1) * (y2 - y1)
 
-            if area < 3000:
+            if area < 12000:
                 continue
 
             if is_box_on_face((x1, y1, x2, y2), faces, rx1, ry1):
@@ -434,13 +447,7 @@ def generate():
             y1 += ry1
             y2 += ry1
 
-            cv2.rectangle(
-                frame,
-                (x1, y1),
-                (x2, y2),
-                status_color,
-                3
-            )
+            cv2.rectangle(frame, (x1, y1), (x2, y2), status_color, 3)
 
             cv2.putText(
                 frame,
@@ -469,12 +476,7 @@ def generate():
         latest_info["action"] = get_action(status)
 
         if status in ["Recyclable", "Non-Recyclable"]:
-            save_result(
-                frame,
-                status,
-                show_label,
-                show_conf
-            )
+            save_result(frame, status, show_label, show_conf)
 
         ret, buffer = cv2.imencode(".jpg", frame)
 
@@ -516,32 +518,46 @@ def blockchain_page():
 
 @app.route("/api/blockchain")
 def api_blockchain():
-    if not os.path.exists(BLOCKCHAIN_FILE):
-        return jsonify([])
+    data = load_json_safe(BLOCKCHAIN_FILE, [])
+    image_map = load_json_safe(BLOCK_IMAGE_FILE, {})
+
+    for block in data:
+        img = image_map.get(str(block.get("index")))
+
+        if img:
+            block["image_url"] = f"/captures/{img}"
+        else:
+            block["image_url"] = ""
+
+    return jsonify(data[::-1])
+
+
+@app.route("/api/verify-blockchain")
+def verify_blockchain():
 
     try:
-        with open(BLOCKCHAIN_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
 
-        image_map = {}
+        blockchain.chain = blockchain.load_chain()
 
-        if os.path.exists(BLOCK_IMAGE_FILE):
-            with open(BLOCK_IMAGE_FILE, "r", encoding="utf-8") as f:
-                image_map = json.load(f)
+        result = blockchain.verify_chain_detail()
 
-        for block in data:
-            img = image_map.get(str(block.get("index")))
-
-            if img:
-                block["image_url"] = f"/captures/{img}"
-            else:
-                block["image_url"] = ""
-
-        return jsonify(data[::-1])
+        return jsonify(result)
 
     except Exception as e:
-        print("Read blockchain error:", e)
-        return jsonify([])
+
+        return jsonify({
+            "valid": False,
+            "block": None,
+            "error": str(e)
+        })
+
+    except Exception as e:
+        print("Verify blockchain error:", e)
+
+        return jsonify({
+            "valid": False,
+            "message": "ERROR"
+        })
 
 
 @app.route("/captures/<filename>")
@@ -552,6 +568,7 @@ def captures(filename):
 if __name__ == "__main__":
     print("📁 BASE_DIR:", BASE_DIR)
     print("📁 BLOCKCHAIN_FILE:", BLOCKCHAIN_FILE)
+    print("🤖 ESP32 IP:", ESP32_IP)
 
     app.run(
         host="0.0.0.0",

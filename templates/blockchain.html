@@ -1,141 +1,342 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Blockchain Data</title>
+    <meta charset="UTF-8">
+    <title>Blockchain Monitor Center</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #060816;
+            --card: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.14);
+            --cyan: #22d3ee;
+            --green: #22c55e;
+            --red: #ef4444;
+            --yellow: #facc15;
+            --purple: #8b5cf6;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+        }
+
         body {
             margin: 0;
+            min-height: 100vh;
+            color: var(--text);
+            font-family: "Segoe UI", Arial, sans-serif;
             background:
-                radial-gradient(circle at top left, rgba(0,255,255,0.18), transparent 35%),
-                #05070a;
-            color: white;
-            font-family: Arial, sans-serif;
+                radial-gradient(circle at top left, rgba(34, 211, 238, 0.22), transparent 34%),
+                radial-gradient(circle at top right, rgba(139, 92, 246, 0.20), transparent 32%),
+                radial-gradient(circle at bottom, rgba(34, 197, 94, 0.12), transparent 35%),
+                var(--bg);
         }
 
-        .header {
-            padding: 28px;
-            text-align: center;
-            border-bottom: 1px solid rgba(0,255,255,0.25);
-        }
-
-        .header h1 {
-            margin: 0;
-            color: #00ffff;
-            font-size: 42px;
-        }
-
-        .header p {
-            color: #b8c5c8;
-        }
-
-        .header a {
-            color: #00ffff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .container {
-            max-width: 1350px;
+        .page {
+            padding: 26px;
+            max-width: 1500px;
             margin: auto;
-            padding: 28px;
         }
 
-        .toolbar {
+        .hero {
+            padding: 26px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(255,255,255,0.13), rgba(255,255,255,0.04));
+            backdrop-filter: blur(16px);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.38);
             display: flex;
             justify-content: space-between;
-            margin-bottom: 18px;
-            gap: 15px;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 38px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            margin: 8px 0 0;
+            color: var(--muted);
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
-        .badge {
-            background: rgba(0,255,255,0.12);
-            border: 1px solid rgba(0,255,255,0.35);
-            padding: 12px 16px;
-            border-radius: 14px;
-            color: #00ffff;
-            font-weight: bold;
+        .btn {
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-weight: 900;
+            border-radius: 16px;
+            padding: 13px 18px;
+            text-decoration: none;
+            font-size: 14px;
         }
 
-        .block {
-            background: rgba(255,255,255,0.075);
-            border: 1px solid rgba(255,255,255,0.14);
-            border-left: 5px solid #00ffff;
-            border-radius: 18px;
+        .btn-home {
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+        }
+
+        .btn-verify {
+            background: linear-gradient(135deg, var(--green), #14b8a6);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            border-radius: 26px;
             padding: 20px;
-            margin-bottom: 18px;
-            box-shadow: 0 0 22px rgba(0,0,0,0.35);
+            background: var(--card);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 18px 60px rgba(0,0,0,0.28);
         }
 
-        .block h2 {
-            margin: 0 0 16px;
-            color: #00ffff;
+        .stat-title {
+            color: var(--muted);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+            margin-bottom: 8px;
         }
 
-        .block-content {
-            display: grid;
-            grid-template-columns: 1.5fr 280px;
-            gap: 22px;
+        .stat-value {
+            font-size: 34px;
+            font-weight: 950;
+        }
+
+        .green { color: var(--green); }
+        .red { color: var(--red); }
+        .cyan { color: var(--cyan); }
+        .yellow { color: var(--yellow); }
+
+        .toolbar {
+            border-radius: 26px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(16px);
+            padding: 18px;
+            margin-bottom: 22px;
+            display: flex;
             align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
         }
 
-        .grid {
+        .verify-status {
+            padding: 12px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(250, 204, 21, 0.35);
+            background: rgba(250, 204, 21, 0.08);
+            color: var(--yellow);
+            font-weight: 900;
+        }
+
+        .auto {
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .blocks {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .block-card {
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.045));
+            border: 1px solid var(--border);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 70px rgba(0,0,0,0.34);
+            overflow: hidden;
+            transition: 0.25s;
+        }
+
+        .tampered-card {
+            border: 3px solid var(--red) !important;
+            background:
+                linear-gradient(135deg, rgba(239,68,68,0.28), rgba(127,29,29,0.22)) !important;
+            box-shadow:
+                0 0 25px rgba(239,68,68,0.75),
+                0 0 70px rgba(239,68,68,0.35) !important;
+            animation: dangerPulse 1s infinite;
+        }
+
+        @keyframes dangerPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.012); }
+            100% { transform: scale(1); }
+        }
+
+        .attack-banner {
+            background: rgba(239,68,68,0.18);
+            border-bottom: 1px solid rgba(239,68,68,0.5);
+            color: #fecaca;
+            font-weight: 950;
+            padding: 14px 22px;
+            font-size: 18px;
+            text-shadow: 0 0 15px rgba(239,68,68,0.8);
+        }
+
+        .block-head {
+            padding: 18px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.48);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .block-title {
+            font-size: 22px;
+            font-weight: 950;
+            color: var(--cyan);
+        }
+
+        .type-badge {
+            padding: 9px 13px;
+            border-radius: 999px;
+            font-weight: 950;
+            font-size: 13px;
+        }
+
+        .type-recycle {
+            background: rgba(34, 197, 94, 0.12);
+            color: var(--green);
+            border: 1px solid rgba(34, 197, 94, 0.35);
+        }
+
+        .type-non {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--red);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+        }
+
+        .type-other {
+            background: rgba(250, 204, 21, 0.12);
+            color: var(--yellow);
+            border: 1px solid rgba(250, 204, 21, 0.35);
+        }
+
+        .block-body {
             display: grid;
-            grid-template-columns: 180px 1fr;
-            gap: 8px 14px;
+            grid-template-columns: 1fr 300px;
+            gap: 22px;
+            padding: 22px;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: 170px 1fr;
+            gap: 12px 16px;
         }
 
         .key {
-            color: #aab7bd;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 700;
         }
 
         .value {
             color: white;
-            font-weight: bold;
+            font-weight: 800;
             word-break: break-all;
         }
 
         .hash {
-            color: #00ffff;
-            word-break: break-all;
             font-family: Consolas, monospace;
+            color: #7dd3fc;
+            word-break: break-all;
+            font-size: 13px;
+            line-height: 1.45;
         }
 
-        .recycle {
-            color: #00ff75;
-        }
-
-        .non {
-            color: #ff3b3b;
+        .image-box {
+            background: rgba(2, 6, 23, 0.5);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 22px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
         }
 
         .block-img {
             width: 100%;
-            border-radius: 16px;
-            border: 2px solid #00ffff;
-            box-shadow: 0 0 20px rgba(0,255,255,0.25);
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 18px;
+            border: 1px solid rgba(34, 211, 238, 0.35);
         }
 
         .no-img {
-            color: #888;
+            color: var(--muted);
             text-align: center;
-            border: 1px dashed #555;
-            border-radius: 16px;
-            padding: 50px 10px;
+            border: 1px dashed rgba(255,255,255,0.25);
+            border-radius: 18px;
+            width: 100%;
+            padding: 60px 10px;
         }
 
-        @media(max-width: 900px) {
-            .block-content {
+        .empty {
+            text-align: center;
+            padding: 50px;
+            color: var(--muted);
+            font-weight: 700;
+            border-radius: 24px;
+            border: 1px dashed rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.04);
+        }
+
+        @media(max-width: 1100px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .block-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 700px) {
+            .page {
+                padding: 14px;
+            }
+
+            .hero {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stats {
                 grid-template-columns: 1fr;
             }
 
-            .grid {
+            .data-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .header h1 {
-                font-size: 30px;
             }
         }
     </style>
@@ -143,97 +344,228 @@
 
 <body>
 
-<div class="header">
-    <h1>Blockchain Data</h1>
-    <p>Stored waste classification blocks from blockchain_web_data.json</p>
-    <a href="/">← Back to Dashboard</a>
+<div class="page">
+
+    <section class="hero">
+        <div>
+            <h1>⛓ <span>BLOCKCHAIN MONITOR CENTER</span></h1>
+            <p>Waste Classification Data · AI Recognition · IoT Smart Sorting · Smart City System</p>
+        </div>
+
+        <div class="actions">
+            <a href="/" class="btn btn-home">← Back Dashboard</a>
+            <button onclick="verifyBlockchain()" class="btn btn-verify">Verify Blockchain</button>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat-card">
+            <div class="stat-title">Total Blocks</div>
+            <div id="totalBlocks" class="stat-value cyan">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-title">Blockchain Status</div>
+            <div id="verifyText" class="stat-value yellow">WAITING</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-title">Recyclable</div>
+            <div id="recycleCount" class="stat-value green">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-title">Non-Recyclable</div>
+            <div id="nonRecycleCount" class="stat-value red">0</div>
+        </div>
+    </section>
+
+    <section class="toolbar">
+        <div id="verifyStatus" class="verify-status">Blockchain: WAITING</div>
+        <div class="auto">Auto refresh every 3 seconds · Source: blockchain_web_data.json</div>
+    </section>
+
+    <section id="blocks" class="blocks">
+        <div class="empty">Loading blockchain data...</div>
+    </section>
+
 </div>
-
-<div class="container">
-
-    <div class="toolbar">
-        <div id="totalBlocks" class="badge">Total Blocks: 0</div>
-        <div class="badge">Auto refresh: 3s</div>
-    </div>
-
-    <div id="blocks">
-        Loading blockchain data...
-    </div>
-
-</div>
-
 
 <script>
-function loadBlockchain() {
-    fetch("/api/blockchain")
-        .then(res => res.json())
-        .then(data => {
-            const box = document.getElementById("blocks");
-            const total = document.getElementById("totalBlocks");
+    let badBlockIndex = null;
 
-            box.innerHTML = "";
-            total.innerText = "Total Blocks: " + data.length;
+    function typeClass(type) {
+        if (type === "Recyclable") return "type-badge type-recycle";
+        if (type === "Non-Recyclable") return "type-badge type-non";
+        return "type-badge type-other";
+    }
 
-            if (data.length === 0) {
-                box.innerHTML = "<p>No blockchain data found.</p>";
-                return;
-            }
+    function safe(value) {
+        if (value === undefined || value === null || value === "") return "None";
+        return value;
+    }
 
-            data.forEach(block => {
-                const div = document.createElement("div");
-                div.className = "block";
+    function clearTamperedCards() {
+        document.querySelectorAll(".tampered-card").forEach(card => {
+            card.classList.remove("tampered-card");
+        });
 
-                let typeClass = "";
-                if (block.waste_type === "Recyclable") {
-                    typeClass = "recycle";
-                } else if (block.waste_type === "Non-Recyclable") {
-                    typeClass = "non";
+        document.querySelectorAll(".attack-banner").forEach(banner => {
+            banner.remove();
+        });
+    }
+
+    function markBadBlock(blockIndex, errorText) {
+        clearTamperedCards();
+
+        const badBlock = document.getElementById("block-" + blockIndex);
+
+        if (badBlock) {
+            badBlock.classList.add("tampered-card");
+
+            const banner = document.createElement("div");
+            banner.className = "attack-banner";
+            banner.innerHTML = `🚨 ATTACK DETECTED · BLOCK #${blockIndex} · ${errorText}`;
+
+            badBlock.prepend(banner);
+
+            badBlock.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
+    }
+
+    function verifyBlockchain() {
+        fetch("/api/verify-blockchain")
+            .then(res => res.json())
+            .then(data => {
+                const status = document.getElementById("verifyStatus");
+                const text = document.getElementById("verifyText");
+
+                if (data.valid === true) {
+                    badBlockIndex = null;
+                    clearTamperedCards();
+
+                    status.innerHTML = "🟢 Blockchain: VERIFIED";
+                    status.style.color = "#22c55e";
+                    status.style.borderColor = "rgba(34,197,94,0.45)";
+                    status.style.background = "rgba(34,197,94,0.10)";
+
+                    text.innerHTML = "VERIFIED";
+                    text.className = "stat-value green";
+                } else {
+                    badBlockIndex = data.block;
+
+                    status.innerHTML = `🔴 Block #${data.block} : ${data.error}`;
+                    status.style.color = "#ef4444";
+                    status.style.borderColor = "rgba(239,68,68,0.45)";
+                    status.style.background = "rgba(239,68,68,0.10)";
+
+                    text.innerHTML = `TAMPERED`;
+                    text.className = "stat-value red";
+
+                    markBadBlock(data.block, data.error);
+                }
+            })
+            .catch(() => {
+                document.getElementById("verifyStatus").innerHTML = "🔴 Blockchain: ERROR";
+                document.getElementById("verifyText").innerHTML = "ERROR";
+                document.getElementById("verifyText").className = "stat-value red";
+            });
+    }
+
+    function loadBlockchain() {
+        fetch("/api/blockchain")
+            .then(res => res.json())
+            .then(data => {
+                const box = document.getElementById("blocks");
+                const total = document.getElementById("totalBlocks");
+                const recycle = document.getElementById("recycleCount");
+                const nonRecycle = document.getElementById("nonRecycleCount");
+
+                total.innerText = data.length;
+
+                let recycleCount = 0;
+                let nonRecycleCount = 0;
+
+                data.forEach(block => {
+                    if (block.waste_type === "Recyclable") recycleCount++;
+                    if (block.waste_type === "Non-Recyclable") nonRecycleCount++;
+                });
+
+                recycle.innerText = recycleCount;
+                nonRecycle.innerText = nonRecycleCount;
+
+                box.innerHTML = "";
+
+                if (!data || data.length === 0) {
+                    box.innerHTML = `<div class="empty">No blockchain data found.</div>`;
+                    return;
                 }
 
-                div.innerHTML = `
-                    <h2>Block #${block.index}</h2>
+                data.forEach(block => {
+                    const div = document.createElement("div");
+                    div.className = "block-card";
+                    div.id = "block-" + block.index;
 
-                    <div class="block-content">
-                        <div class="grid">
-                            <div class="key">Time</div>
-                            <div class="value">${block.real_time}</div>
-
-                            <div class="key">Waste Type</div>
-                            <div class="value ${typeClass}">${block.waste_type}</div>
-
-                            <div class="key">Confidence</div>
-                            <div class="value">${block.confidence}</div>
-
-                            <div class="key">Status</div>
-                            <div class="value">${block.status}</div>
-
-                            <div class="key">Nonce</div>
-                            <div class="value">${block.nonce}</div>
-
-                            <div class="key">Previous Hash</div>
-                            <div class="hash">${block.previous_hash}</div>
-
-                            <div class="key">Hash</div>
-                            <div class="hash">${block.hash}</div>
+                    div.innerHTML = `
+                        <div class="block-head">
+                            <div class="block-title">Block #${safe(block.index)}</div>
+                            <div class="${typeClass(block.waste_type)}">${safe(block.waste_type)}</div>
                         </div>
 
-                        <div>
-                            ${
-                                block.image_url
-                                ? `<img class="block-img" src="${block.image_url}">`
-                                : `<div class="no-img">No image</div>`
-                            }
-                        </div>
-                    </div>
-                `;
+                        <div class="block-body">
+                            <div class="data-grid">
+                                <div class="key">Time</div>
+                                <div class="value">${safe(block.real_time)}</div>
 
-                box.appendChild(div);
+                                <div class="key">Waste Type</div>
+                                <div class="value">${safe(block.waste_type)}</div>
+
+                                <div class="key">Confidence</div>
+                                <div class="value">${safe(block.confidence)}</div>
+
+                                <div class="key">Status</div>
+                                <div class="value">${safe(block.status)}</div>
+
+                                <div class="key">Nonce</div>
+                                <div class="value">${safe(block.nonce)}</div>
+
+                                <div class="key">Previous Hash</div>
+                                <div class="hash">${safe(block.previous_hash)}</div>
+
+                                <div class="key">Current Hash</div>
+                                <div class="hash">${safe(block.hash)}</div>
+                            </div>
+
+                            <div class="image-box">
+                                ${
+                                    block.image_url
+                                    ? `<img class="block-img" src="${block.image_url}" alt="Waste Image">`
+                                    : `<div class="no-img">No image available</div>`
+                                }
+                            </div>
+                        </div>
+                    `;
+
+                    box.appendChild(div);
+                });
+
+                if (badBlockIndex !== null) {
+                    markBadBlock(badBlockIndex, "HASH_INVALID");
+                }
+            })
+            .catch(() => {
+                document.getElementById("blocks").innerHTML =
+                    `<div class="empty">Cannot load blockchain data.</div>`;
             });
-        });
-}
+    }
 
-loadBlockchain();
-setInterval(loadBlockchain, 3000);
+    loadBlockchain();
+    verifyBlockchain();
+
+    setInterval(loadBlockchain, 3000);
 </script>
 
 </body>

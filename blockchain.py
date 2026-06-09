@@ -422,3 +422,41 @@ class Blockchain:
             chain.append(block)
 
         return chain
+    def verify_chain_detail(self):
+
+        for i in range(1, len(self.chain)):
+
+            current = self.chain[i]
+            previous = self.chain[i - 1]
+
+            if current.hash != current.calculate_hash():
+
+                return {
+                    "valid": False,
+                    "block": i,
+                    "error": "HASH_INVALID"
+                }
+
+            if current.previous_hash != previous.hash:
+
+                return {
+                    "valid": False,
+                    "block": i,
+                    "error": "LINK_INVALID"
+               }
+
+            if not current.hash.startswith(
+                "0" * self.difficulty
+            ):
+
+                return {
+                    "valid": False,
+                    "block": i,
+                    "error": "NOT_MINED"
+                }
+
+        return {
+            "valid": True,
+            "block": None,
+            "error": None
+        }

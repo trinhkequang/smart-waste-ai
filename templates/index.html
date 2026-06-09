@@ -1,129 +1,286 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Smart Waste AI Blockchain</title>
+    <meta charset="UTF-8">
+    <title>Smart Waste Sorting System</title>
 
     <style>
         * {
             box-sizing: border-box;
         }
 
+        :root {
+            --bg: #060816;
+            --card: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.14);
+            --cyan: #22d3ee;
+            --green: #22c55e;
+            --red: #ef4444;
+            --yellow: #facc15;
+            --purple: #8b5cf6;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+        }
+
         body {
             margin: 0;
+            min-height: 100vh;
+            color: var(--text);
+            font-family: "Segoe UI", Arial, sans-serif;
             background:
-                radial-gradient(circle at top left, rgba(0,255,255,0.18), transparent 35%),
-                radial-gradient(circle at top right, rgba(0,255,120,0.12), transparent 30%),
-                #05070a;
-            color: white;
-            font-family: Arial, sans-serif;
+                radial-gradient(circle at top left, rgba(34, 211, 238, 0.22), transparent 34%),
+                radial-gradient(circle at top right, rgba(139, 92, 246, 0.22), transparent 32%),
+                radial-gradient(circle at bottom, rgba(34, 197, 94, 0.12), transparent 35%),
+                var(--bg);
+        }
+
+        .page {
+            padding: 26px;
         }
 
         .header {
-            padding: 24px 34px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 22px 26px;
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 70px rgba(0,0,0,0.35);
+            margin-bottom: 24px;
         }
 
         .brand h1 {
             margin: 0;
-            color: #00ffff;
-            font-size: 38px;
-            letter-spacing: 1px;
+            font-size: 34px;
+            letter-spacing: 0.5px;
+        }
+
+        .brand span {
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            -webkit-background-clip: text;
+            color: transparent;
         }
 
         .brand p {
             margin: 8px 0 0;
-            color: #aab7bd;
+            color: var(--muted);
+            font-size: 15px;
         }
 
-        .nav a {
-            color: #00ffff;
+        .top-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .pill {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            color: #dffcff;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .nav-btn {
+            color: white;
             text-decoration: none;
-            border: 1px solid rgba(0,255,255,0.5);
             padding: 12px 18px;
-            border-radius: 14px;
-            background: rgba(0,255,255,0.08);
-            font-weight: bold;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            box-shadow: 0 12px 30px rgba(34, 211, 238, 0.2);
+            font-weight: 800;
         }
 
-        .container {
+        .layout {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 1.65fr 1fr;
             gap: 24px;
-            padding: 0 34px 28px;
         }
 
-        .camera-card {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(0,255,255,0.35);
-            border-radius: 26px;
+        .glass {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 70px rgba(0,0,0,0.32);
+        }
+
+        .camera-panel {
             padding: 18px;
-            box-shadow: 0 0 35px rgba(0,255,255,0.12);
         }
 
-        .camera-card img {
+        .panel-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .panel-title h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .live-dot {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #d1fae5;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .live-dot::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 18px var(--green);
+        }
+
+        .camera-wrap {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            border: 1px solid rgba(34, 211, 238, 0.35);
+            background: rgba(0,0,0,0.35);
+        }
+
+        .camera-wrap img {
             width: 100%;
-            border-radius: 20px;
-            border: 2px solid rgba(0,255,255,0.7);
+            display: block;
+            border-radius: 24px;
         }
 
-        .side {
+        .camera-overlay {
+            position: absolute;
+            left: 18px;
+            bottom: 18px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            background: rgba(2, 6, 23, 0.72);
+            border: 1px solid rgba(255,255,255,0.16);
+            backdrop-filter: blur(12px);
+            color: #dbeafe;
+            font-weight: 700;
+        }
+
+        .right-panel {
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
 
-        .card {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.13);
-            border-radius: 22px;
-            padding: 20px;
-            box-shadow: 0 0 24px rgba(0,0,0,0.35);
+        .result-card {
+            padding: 22px;
+            min-height: 185px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .card h2 {
-            margin: 0 0 14px;
-            color: #00ffff;
-            font-size: 19px;
+        .result-card::after {
+            content: "";
+            position: absolute;
+            right: -70px;
+            top: -70px;
+            width: 190px;
+            height: 190px;
+            border-radius: 50%;
+            background: rgba(34, 211, 238, 0.14);
+        }
+
+        .label-small {
+            color: var(--muted);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
         }
 
         .status {
-            font-size: 34px;
-            font-weight: bold;
-            margin-bottom: 12px;
+            font-size: 40px;
+            font-weight: 900;
+            margin: 10px 0;
+            line-height: 1.1;
         }
 
         .recycle {
-            color: #00ff75;
+            color: var(--green);
+            text-shadow: 0 0 18px rgba(34,197,94,0.35);
         }
 
         .non {
-            color: #ff3b3b;
+            color: var(--red);
+            text-shadow: 0 0 18px rgba(239,68,68,0.35);
         }
 
         .waiting {
-            color: #ffd23c;
+            color: var(--yellow);
+            text-shadow: 0 0 18px rgba(250,204,21,0.25);
         }
 
-        .action {
-            padding: 13px;
-            border-radius: 14px;
-            background: rgba(0,255,255,0.12);
-            font-weight: bold;
+        .message {
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #e2e8f0;
+            font-weight: 700;
         }
 
-        .info-row {
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .mini-card {
+            padding: 16px;
+            border-radius: 22px;
+            background: rgba(255,255,255,0.075);
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .mini-card .title {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .mini-card .value {
+            font-size: 18px;
+            font-weight: 850;
+            word-break: break-word;
+        }
+
+        .full-card {
+            padding: 18px;
+        }
+
+        .full-card h2 {
+            margin: 0 0 14px;
+            font-size: 19px;
+        }
+
+        .row {
             display: flex;
             justify-content: space-between;
-            gap: 12px;
-            margin: 10px 0;
-            color: #d7e2e5;
-            font-size: 15px;
+            gap: 18px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            color: #cbd5e1;
         }
 
-        .value {
-            font-weight: bold;
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .row b {
             color: white;
             text-align: right;
         }
@@ -131,49 +288,124 @@
         .stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 14px;
         }
 
         .stat-box {
-            background: rgba(0,0,0,0.32);
-            padding: 18px;
-            border-radius: 16px;
+            padding: 20px;
+            border-radius: 24px;
             text-align: center;
+            background: rgba(2, 6, 23, 0.48);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .num {
-            font-size: 34px;
-            font-weight: bold;
+            font-size: 42px;
+            font-weight: 950;
+            margin-bottom: 6px;
         }
 
-        .history {
-            max-height: 260px;
-            overflow-y: auto;
+        .history-panel {
+            margin-top: 24px;
+            padding: 20px;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .history-header h2 {
+            margin: 0;
+            font-size: 21px;
+        }
+
+        .history-list {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
         }
 
         .history-item {
-            background: rgba(0,0,0,0.30);
-            border-left: 4px solid #00ffff;
-            padding: 11px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            font-size: 14px;
+            background: rgba(15, 23, 42, 0.62);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 14px;
+            min-height: 110px;
+        }
+
+        .history-type {
+            font-weight: 900;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .history-label {
+            color: #cbd5e1;
+            font-size: 13px;
+            margin-bottom: 8px;
         }
 
         .history-time {
-            color: #9aa;
+            color: var(--muted);
             font-size: 12px;
         }
 
-        @media(max-width: 1000px) {
-            .container {
+        .badge {
+            display: inline-block;
+            padding: 7px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 900;
+            background: rgba(34, 211, 238, 0.1);
+            border: 1px solid rgba(34, 211, 238, 0.25);
+            color: #cffafe;
+        }
+
+        @media(max-width: 1150px) {
+            .layout {
                 grid-template-columns: 1fr;
+            }
+
+            .history-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 700px) {
+            .page {
+                padding: 14px;
             }
 
             .header {
                 flex-direction: column;
-                gap: 16px;
+                align-items: flex-start;
+            }
+
+            .brand h1 {
+                font-size: 26px;
+            }
+
+            .top-actions {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .nav-btn, .pill {
                 text-align: center;
+            }
+
+            .info-grid,
+            .stats,
+            .history-list {
+                grid-template-columns: 1fr;
+            }
+
+            .status {
+                font-size: 32px;
             }
         }
     </style>
@@ -181,78 +413,85 @@
 
 <body>
 
-<div class="header">
-    <div class="brand">
-        <h1>♻ SMART WASTE AI</h1>
-        <p>AI Waste Sorting System · Blockchain Storage · Telegram Alert</p>
-    </div>
+<div class="page">
 
-    <div class="nav">
-        <a href="/blockchain">View Blockchain Data</a>
-    </div>
-</div>
-
-<div class="container">
-
-    <div class="camera-card">
-        <img src="/video">
-    </div>
-
-    <div class="side">
-
-        <div class="card">
-            <h2>Current Classification</h2>
-            <div id="mainStatus" class="status waiting">WAITING</div>
-            <div id="message" class="action">Đưa rác vào vùng nhận diện</div>
+    <header class="header">
+        <div class="brand">
+            <h1>♻ <span>SMART WASTE SORTING</span></h1>
+            <p>AI Recognition · IoT Sorting · Blockchain Data · Telegram Alert</p>
         </div>
 
-        <div class="card">
-            <h2>Detection Information</h2>
-
-            <div class="info-row">
-                <span>Detected Object</span>
-                <span id="label" class="value">None</span>
-            </div>
-
-            <div class="info-row">
-                <span>Confidence</span>
-                <span id="confidence" class="value">0</span>
-            </div>
-
-            <div class="info-row">
-                <span>Action</span>
-                <span id="action" class="value">Waiting</span>
-            </div>
-
-            <div class="info-row">
-                <span>Telegram</span>
-                <span id="telegram" class="value">WAITING</span>
-            </div>
+        <div class="top-actions">
+            <div class="pill">● System Online</div>
+            <a class="nav-btn" href="/blockchain">View Blockchain</a>
         </div>
+    </header>
 
-        <div class="card">
-            <h2>Blockchain Status</h2>
+    <main class="layout">
 
-            <div class="info-row">
-                <span>Status</span>
-                <span id="blockchainStatus" class="value">WAITING</span>
+        <section class="glass camera-panel">
+            <div class="panel-title">
+                <h2>Live Camera Detection</h2>
+                <div class="live-dot">LIVE</div>
             </div>
 
-            <div class="info-row">
-                <span>Latest Block</span>
-                <span id="latestBlock" class="value">None</span>
+            <div class="camera-wrap">
+                <img src="/video" alt="Camera Stream">
+                <div class="camera-overlay">Put waste inside the detection area</div>
             </div>
+        </section>
 
-            <div class="info-row">
-                <span>Hash</span>
-                <span id="latestHash" class="value">None</span>
-            </div>
-        </div>
+        <aside class="right-panel">
 
-        <div class="card">
-            <h2>Statistics</h2>
+            <section class="glass result-card">
+                <div class="label-small">Current Classification</div>
+                <div id="mainStatus" class="status waiting">WAITING</div>
+                <div id="message" class="message">Đưa rác vào vùng nhận diện</div>
+            </section>
 
-            <div class="stats">
+            <section class="info-grid">
+                <div class="mini-card">
+                    <div class="title">Detected Object</div>
+                    <div id="label" class="value">None</div>
+                </div>
+
+                <div class="mini-card">
+                    <div class="title">Confidence</div>
+                    <div id="confidence" class="value">0</div>
+                </div>
+
+                <div class="mini-card">
+                    <div class="title">Telegram</div>
+                    <div id="telegram" class="value">WAITING</div>
+                </div>
+
+                <div class="mini-card">
+                    <div class="title">IoT ESP32</div>
+                    <div id="iotStatus" class="value">WAITING</div>
+                </div>
+            </section>
+
+            <section class="glass full-card">
+                <h2>Sorting Action</h2>
+                <div class="row">
+                    <span>Action</span>
+                    <b id="action">Đang chờ phân loại</b>
+                </div>
+                <div class="row">
+                    <span>Blockchain</span>
+                    <b id="blockchainStatus">WAITING</b>
+                </div>
+                <div class="row">
+                    <span>Latest Block</span>
+                    <b id="latestBlock">None</b>
+                </div>
+                <div class="row">
+                    <span>Latest Hash</span>
+                    <b id="latestHash">None</b>
+                </div>
+            </section>
+
+            <section class="stats">
                 <div class="stat-box">
                     <div id="recycleCount" class="num recycle">0</div>
                     <div>Recyclable</div>
@@ -262,68 +501,93 @@
                     <div id="nonRecycleCount" class="num non">0</div>
                     <div>Non-Recyclable</div>
                 </div>
-            </div>
+            </section>
+
+        </aside>
+
+    </main>
+
+    <section class="glass history-panel">
+        <div class="history-header">
+            <h2>Recent Classification History</h2>
+            <span class="badge">Latest 10 records</span>
         </div>
 
-        <div class="card">
-            <h2>Recent History</h2>
-            <div id="history" class="history"></div>
-        </div>
-
-    </div>
+        <div id="history" class="history-list"></div>
+    </section>
 
 </div>
 
-
 <script>
+    function statusClass(status) {
+        if (status === "Recyclable") return "status recycle";
+        if (status === "Non-Recyclable") return "status non";
+        return "status waiting";
+    }
+
+    function shortText(value) {
+        if (value === undefined || value === null || value === "") return "WAITING";
+        return value;
+    }
+
     function updateStatus() {
         fetch("/status")
             .then(response => response.json())
             .then(data => {
                 const status = document.getElementById("mainStatus");
 
-                status.innerText = data.status;
-                status.className = "status";
+                status.innerText = shortText(data.status);
+                status.className = statusClass(data.status);
 
-                if (data.status === "Recyclable") {
-                    status.classList.add("recycle");
-                } else if (data.status === "Non-Recyclable") {
-                    status.classList.add("non");
-                } else {
-                    status.classList.add("waiting");
-                }
-
-                document.getElementById("message").innerText = data.message;
-                document.getElementById("label").innerText = data.label;
-                document.getElementById("confidence").innerText = data.confidence;
-                document.getElementById("action").innerText = data.action;
-                document.getElementById("telegram").innerText = data.telegram_status;
-                document.getElementById("blockchainStatus").innerText = data.blockchain_status;
-                document.getElementById("latestBlock").innerText = data.latest_block;
-                document.getElementById("latestHash").innerText = data.latest_hash;
-                document.getElementById("recycleCount").innerText = data.recycle_count;
-                document.getElementById("nonRecycleCount").innerText = data.non_recycle_count;
+                document.getElementById("message").innerText = shortText(data.message);
+                document.getElementById("label").innerText = shortText(data.label);
+                document.getElementById("confidence").innerText = shortText(data.confidence);
+                document.getElementById("action").innerText = shortText(data.action);
+                document.getElementById("telegram").innerText = shortText(data.telegram_status);
+                document.getElementById("iotStatus").innerText = shortText(data.iot_status);
+                document.getElementById("blockchainStatus").innerText = shortText(data.blockchain_status);
+                document.getElementById("latestBlock").innerText = shortText(data.latest_block);
+                document.getElementById("latestHash").innerText = shortText(data.latest_hash);
+                document.getElementById("recycleCount").innerText = data.recycle_count || 0;
+                document.getElementById("nonRecycleCount").innerText = data.non_recycle_count || 0;
 
                 const historyBox = document.getElementById("history");
                 historyBox.innerHTML = "";
+
+                if (!data.history || data.history.length === 0) {
+                    historyBox.innerHTML = `
+                        <div class="history-item">
+                            <div class="history-type waiting">No data yet</div>
+                            <div class="history-label">Waiting for first detection</div>
+                            <div class="history-time">System ready</div>
+                        </div>
+                    `;
+                    return;
+                }
 
                 data.history.forEach(item => {
                     const div = document.createElement("div");
                     div.className = "history-item";
 
+                    const typeClass = item.status === "Recyclable" ? "recycle" : "non";
+
                     div.innerHTML = `
-                        <b>${item.status}</b> · ${item.label}
-                        <br>
-                        Confidence: ${item.confidence}
-                        <br>
-                        <span class="history-time">${item.datetime}</span>
+                        <div class="history-type ${typeClass}">${item.status}</div>
+                        <div class="history-label">${item.label}</div>
+                        <div>Confidence: <b>${item.confidence}</b></div>
+                        <div class="history-time">${item.datetime}</div>
                     `;
 
                     historyBox.appendChild(div);
                 });
+            })
+            .catch(() => {
+                document.getElementById("mainStatus").innerText = "OFFLINE";
+                document.getElementById("mainStatus").className = "status non";
             });
     }
 
+    updateStatus();
     setInterval(updateStatus, 700);
 </script>
 

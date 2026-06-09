@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 from ultralytics import YOLO
 import time
 import requests
@@ -8,14 +9,14 @@ from blockchain import Blockchain
 # =========================================
 # TELEGRAM
 # =========================================
-BOT_TOKEN = "8394675541:AAEFioTztoQuM7wBoWfQSmA1unXJqBRj7TI"
-CHAT_ID = "5253139760"
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
 
 
 def send_telegram(text):
 
     # Nếu chưa nhập token thì bỏ qua
-    if BOT_TOKEN == "YOUR_BOT_TOKEN":
+    if not BOT_TOKEN or not CHAT_ID:
         return
 
     try:
@@ -39,7 +40,7 @@ def send_telegram(text):
 def send_photo(path):
 
     # Nếu chưa nhập token thì bỏ qua
-    if BOT_TOKEN == "YOUR_BOT_TOKEN":
+    if not BOT_TOKEN or not CHAT_ID:
         return
 
     try:
